@@ -36,7 +36,7 @@ These components are containerized using Docker, orchestrated using Kubernetes, 
 
 # 🧱 Tech Stack
 
-```bash
+
 | Category | Tool / Service |
 | ---------------------- | --------------------- |
 | **Infrastructure** | AWS VPC, EKS, EC2 |
@@ -47,7 +47,7 @@ These components are containerized using Docker, orchestrated using Kubernetes, 
 | **Backend** | Spring Boot (Java 17) |
 | **Frontend** | React.js |
 | **Database** | MySQL 8.0 |
-```
+
 
 # 📦 Folder Structure
 
