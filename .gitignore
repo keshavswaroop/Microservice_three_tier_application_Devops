@@ -1,0 +1,113 @@
+# # ======================
+# 🌱 General
+# ======================
+*.log
+*.tmp
+*.swp
+*.bak
+.DS_Store
+Thumbs.db
+
+# ======================
+# 🧩 Environment & Secrets
+# ======================
+.env
+.env.*
+*.secret
+*.secrets
+# secrets.yml
+# configmap.yml
+*.kubeconfig
+kubeconfig
+.kube/
+kubeconfig.yaml
+
+# Never commit your Kubernetes secrets or kubeconfig
+# k8s/secrets.yml
+
+# ======================
+# ☕ Java / Spring Boot (Backend)
+# ======================
+backend/target/
+backend/.idea/
+backend/.project
+backend/.classpath
+backend/.settings/
+backend/*.iml
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+
+# ======================
+# ⚛️ Node / React (Frontend)
+# ======================
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.eslintcache
+
+# ======================
+# 🐳 Docker
+# ======================
+.dockerignore
+Dockerfile~
+docker-compose.override.yml
+*.tar
+*.gz
+*.zip
+
+# ======================
+# ☸️ Kubernetes
+# ======================
+# Local test manifests or backups
+*.yml~
+*.yaml~
+k8s/tmp/
+k8s/test/
+k8s/local/
+
+# ======================
+# 🧰 IDEs and Editors
+# ======================
+.vscode/
+.idea/
+*.iml
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
+
+# ======================
+# 🧾 Build & CI/CD
+# ======================
+.github/*.bak
+.github/workflows/*.bak
+*.pid
+coverage/
+reports/
+logs/
+tmp/
+build/
+
+# ======================
+# 🧩 Jenkins / GitHub Actions
+# ======================
+Jenkinsfile~
+.github/workflows/test.yml~
+
+# ======================
+# 🔒 Security
+# ======================
+*password*
+# *secret*
+*token*
+*.pem
+*.crt
+*.key
+
