@@ -1,120 +1,185 @@
-# Dockerized Spring React MySQL App
+🧩 Project Overview
 
-Basic Full Stack App with Spring Boot, React, and MySQL, all running in Docker containers.
+The project consists of three main components:
+| Tier | Technology | Description |
+| ------------ | --------------------- | ---------------------------------------- |
+| **Frontend** | React.js | A user interface served via Nginx |
+| **Backend** | Spring Boot (Java 17) | A REST API that connects to the database |
+| **Database** | MySQL 8.0 | Stores user and application data |
 
-The goal of this project is to demonstrate how Docker can be used to run a full stack application, helping to avoid the "works on my computer" problem, and also to make it easier to test a full stack application without having to install all the dependencies or complex configurations.
+These components are containerized using Docker, orchestrated using Kubernetes, and deployed to AWS EKS using a CI/CD pipeline built with GitHub Actions.
 
-Do you speak Español?: 👉 [Léeme](./LEEME.md)
+🏗️ Architecture
 
-## Description
++--------------------------------------+
+| GitHub Actions CI/CD |
+| (Build → Push → Deploy to EKS) |
++--------------------------------------+
+|
+▼
++--------------------------------------+
+| AWS EKS Cluster |
+|--------------------------------------|
+| Namespace: mtta |
+| ├── Frontend Deployment + Service |
+| ├── Backend Deployment + Service |
+| ├── MySQL Deployment + Service |
++--------------------------------------+
+|
+▼
++--------------------------------------+
+| AWS Infrastructure (VPC) |
+| Created via Terraform (VPC + EKS) |
++--------------------------------------+
 
-The app is a simple full stack application that saves a user's name and email address to a MySQL database.The backend is a Spring Boot application that exposes a REST API. The frontend is a React application that uses the backend API to save and retrieve data from the database.
+🧱 Tech Stack
+| Category | Tool / Service |
+| ---------------------- | --------------------- |
+| **Infrastructure** | AWS VPC, EKS, EC2 |
+| **IaC (Provisioning)** | Terraform |
+| **Containers** | Docker |
+| **Orchestration** | Kubernetes |
+| **CI/CD** | GitHub Actions |
+| **Backend** | Spring Boot (Java 17) |
+| **Frontend** | React.js |
+| **Database** | MySQL 8.0 |
 
-### Technologies Used
+📦 Folder Structure
+Microservice_3_tier_application/
+├── backend/ # Spring Boot REST API
+│ ├── Dockerfile
+│ ├── src/
+│ └── target/backend.jar
+│
+├── frontend/ # React.js app
+│ ├── Dockerfile
+│ ├── src/
+│ └── build/
+│
+├── k8s/ # Kubernetes manifests
+│ ├── backend-deployment.yml
+│ ├── backend-service.yml
+│ ├── frontend-deployment.yml
+│ ├── frontend-service.yml
+│ ├── mysql-deployment.yml
+│ ├── mysql-service.yml
+│ ├── configmap.yml
+│ ├── secrets.yml
+│ └── namespace.yml
+│
+├── terraform/ # Terraform modules
+│ ├── main.tf
+│ ├── variables.tf
+│ ├── outputs.tf
+│ ├── vpc/
+│ │ └── infra/
+│ └── eks/
+│ └── infra/
+│
+├── .github/
+│ └── workflows/
+│ └── cicd.yml # GitHub Actions CI/CD pipeline
+│
+└── README.md
 
-- Programming Language: [Java](https://www.java.com/), [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-- Frameworks: [Spring Boot](https://spring.io/projects/spring-boot), [React](https://react.dev/)
-- Database: [MySQL](https://www.mysql.com/)
-- Database Management: [phpMyAdmin](https://www.phpmyadmin.net/)
-- Containerization: [Docker](https://www.docker.com/)
-- Dev Environment: [VSCode](https://code.visualstudio.com/) with [dev containers](https://code.visualstudio.com/docs/remote/containers) in [Zorin OS](https://zorinos.com/)
+🧰 Prerequisites
+Before setting up the project, ensure you have:
 
-## How to use for production or testing purposes
+- An AWS account
+- Docker installed locally
+- Terraform installed
+- kubectl and AWS CLI installed
+- GitHub repository with secrets configured:
+  - DOCKERHUB_USERNAME
+  - DOCKERHUB_TOKEN
+  - AWS_ACCESS_KEY_ID
+  - AWS_SECRET_ACCESS_KEY
 
-You need to have installed [Docker](https://www.docker.com/), the most easy way to install it is using the [Docker Desktop](https://www.docker.com/products/docker-desktop) application.
+🌍 Infrastructure Setup (Terraform)
+Terraform is used to automate creation of:
 
-1. Clone this repository and enter the folder
+- VPC
+- Subnets
+- Internet Gateway
+- EKS Cluster + Node Group
+
+Commands to Run:
 
 ```bash
-git clone git@github.com:jhordyess/dockerized-spring-react-mysql.git
+cd terraform
+terraform init
+terraform plan
+terraform apply -auto-approve
 ```
 
-2. Create a `.env` file in the root folder by copying the example from the [`.env.example`](./.env.example) file.
-
-3. Then, run the following command:
+Once done, update your kubeconfig to connect to the new cluster:
 
 ```bash
-make
-
-# If you don't have 'make' installed, use:
-docker compose up -d
+aws eks update-kubeconfig --region <your-region> --name <your-cluster-name>
+kubectl get nodes
 ```
 
-4. After that, open the browser and visit <http://localhost/>.
-
-5. To remove the containers, use the following commands:
+🐳 Docker
+Build and push:
 
 ```bash
-make clean
-
-# If you don't have 'make' installed, use:
-docker compose down
+docker build -t <username>/mtta_backend .
+docker build -t <username>/mtta_frontend .
+docker push <username>/mtta_backend
+docker push <username>/mtta_frontend
 ```
 
-Take note that this production configuration is just for testing purposes, and maybe need some changes to be used in a real production environment.
-
-## How to use in development
-
-You can use the VSCode dev containers to run the project in a containerized environment.
-
-You need to have installed [Docker](https://www.docker.com/) and [VSCode](https://code.visualstudio.com/), and the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension.
-
-1. Clone this repository
+☸️ Kubernetes Setup
+Deploy the application:
 
 ```bash
-git clone git@github.com:jhordyess/dockerized-spring-react-mysql.git
+kubectl apply -f k8s/namespace.yml
+kubectl apply -f k8s/secrets.yml
+kubectl apply -f k8s/configmap.yml
+kubectl apply -f k8s/mysql-deployment.yml
+kubectl apply -f k8s/mysql-service.yml
+kubectl apply -f k8s/backend-deployment.yml
+kubectl apply -f k8s/backend-service.yml
+kubectl apply -f k8s/frontend-deployment.yml
+kubectl apply -f k8s/frontend-service.yml
 ```
 
-2. Open the project in VSCode
+Verify deployments:
 
 ```bash
-code dockerized-spring-react-mysql
+kubectl get all -n mtta
 ```
 
-3. Create a `.env` file in the root folder by copying the example from the [`.env.example`](./.env.example) file.
-
-4. Open the integrated terminal (Ctrl+Shift+`) and run the following command:
+If using a LoadBalancer service (for frontend):
 
 ```bash
-docker compose -f docker-compose.dev.yml up -d
+kubectl get svc -n mtta
 ```
 
-5. Open the command palette (Ctrl+Shift+P) and select the option `Dev Containers: Open folder in Container`.
+⚙️ GitHub Actions CI/CD Workflow
+Located in .github/workflows/cicd.yml
 
-6. Select the folder `backend` and wait for the container to be built.
+Workflow Summary:
 
-7. Open the integrated terminal (Ctrl+Shift+`) and run the following command:
+1. Checkout code from GitHub
+2. Build Docker images for backend & frontend
+3. Push images to DockerHub
+4. Configure AWS credentials
+5. Update kubeconfig for EKS cluster
+6. Deploy updated manifests to EKS
+   The pipeline is triggered: manually via “Run workflow” in GitHub Actions
+
+✅ Verification
+Once workflow completes:
+
+Check GitHub Actions logs → Deployment successful message
+
+Run:
 
 ```bash
-mvn spring-boot:run
+kubectl get svc -n mtta
 ```
 
-8. For the frontend, open the command palette (Ctrl+Shift+P) and select the option `Dev Containers: Open folder in Container`.
+Copy the LoadBalancer EXTERNAL-IP of frontend-service
 
-9. Select the folder `frontend` and wait for the container to be built.
-
-10. Open the integrated terminal (Ctrl+Shift+`) and run the following command:
-
-```bash
-npm run dev
-```
-
-11. Open the browser and visit <http://localhost:5173/>
-
-12. Also you can visit <http://localhost:81/> to manage the database with phpMyAdmin.
-
-## To-Do
-
-- [ ] Add CSS styles to the frontend
-
-## Contribution
-
-If you would like to contribute to the project, open an issue or make a pull request on the repository.
-
-## License
-
-© 2023 [Jhordyess](https://github.com/jhordyess). Under the [MIT](https://choosealicense.com/licenses/mit/) license. See the [LICENSE](./LICENSE) file for more details.
-
----
-
-Made with 💪 by [Jhordyess](https://www.jhordyess.com/)
+Open it in your browser → App should be live 🎉
