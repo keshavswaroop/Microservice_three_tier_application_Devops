@@ -1,4 +1,4 @@
-🧩 Project Overview
+# 🧩 Project Overview
 
 The project consists of three main components:
 | Tier | Technology | Description |
@@ -9,8 +9,9 @@ The project consists of three main components:
 
 These components are containerized using Docker, orchestrated using Kubernetes, and deployed to AWS EKS using a CI/CD pipeline built with GitHub Actions.
 
-🏗️ Architecture
+# 🏗️ Architecture
 
+```bash
 +--------------------------------------+
 | GitHub Actions CI/CD |
 | (Build → Push → Deploy to EKS) |
@@ -31,8 +32,11 @@ These components are containerized using Docker, orchestrated using Kubernetes, 
 | AWS Infrastructure (VPC) |
 | Created via Terraform (VPC + EKS) |
 +--------------------------------------+
+```
 
-🧱 Tech Stack
+# 🧱 Tech Stack
+
+```bash
 | Category | Tool / Service |
 | ---------------------- | --------------------- |
 | **Infrastructure** | AWS VPC, EKS, EC2 |
@@ -43,8 +47,11 @@ These components are containerized using Docker, orchestrated using Kubernetes, 
 | **Backend** | Spring Boot (Java 17) |
 | **Frontend** | React.js |
 | **Database** | MySQL 8.0 |
+```
 
-📦 Folder Structure
+# 📦 Folder Structure
+
+```bash
 Microservice_3_tier_application/
 ├── backend/ # Spring Boot REST API
 │ ├── Dockerfile
@@ -81,8 +88,10 @@ Microservice_3_tier_application/
 │ └── cicd.yml # GitHub Actions CI/CD pipeline
 │
 └── README.md
+```
 
-🧰 Prerequisites
+# 🧰 Prerequisites
+
 Before setting up the project, ensure you have:
 
 - An AWS account
@@ -95,7 +104,8 @@ Before setting up the project, ensure you have:
   - AWS_ACCESS_KEY_ID
   - AWS_SECRET_ACCESS_KEY
 
-🌍 Infrastructure Setup (Terraform)
+# 🌍 Infrastructure Setup (Terraform)
+
 Terraform is used to automate creation of:
 
 - VPC
@@ -119,7 +129,8 @@ aws eks update-kubeconfig --region <your-region> --name <your-cluster-name>
 kubectl get nodes
 ```
 
-🐳 Docker
+# 🐳 Docker
+
 Build and push:
 
 ```bash
@@ -129,7 +140,8 @@ docker push <username>/mtta_backend
 docker push <username>/mtta_frontend
 ```
 
-☸️ Kubernetes Setup
+# ☸️ Kubernetes Setup
+
 Deploy the application:
 
 ```bash
@@ -156,7 +168,8 @@ If using a LoadBalancer service (for frontend):
 kubectl get svc -n mtta
 ```
 
-⚙️ GitHub Actions CI/CD Workflow
+# ⚙️ GitHub Actions CI/CD Workflow
+
 Located in .github/workflows/cicd.yml
 
 Workflow Summary:
@@ -169,7 +182,8 @@ Workflow Summary:
 6. Deploy updated manifests to EKS
    The pipeline is triggered: manually via “Run workflow” in GitHub Actions
 
-✅ Verification
+# ✅ Verification
+
 Once workflow completes:
 
 Check GitHub Actions logs → Deployment successful message
