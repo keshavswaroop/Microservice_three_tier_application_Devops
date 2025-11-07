@@ -15,8 +15,8 @@ Thumbs.db
 .env.*
 *.secret
 *.secrets
-# secrets.yml
-# configmap.yml
+secrets.yml
+configmap.yml
 *.kubeconfig
 kubeconfig
 .kube/
@@ -105,7 +105,7 @@ Jenkinsfile~
 # 🔒 Security
 # ======================
 *password*
-# *secret*
+*secret*
 *token*
 *.pem
 *.crt
