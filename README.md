@@ -197,3 +197,84 @@ kubectl get svc -n mtta
 Copy the LoadBalancer EXTERNAL-IP of frontend-service
 
 Open it in your browser → App should be live 🎉
+
+# 📊 Monitoring & Observability
+
+## 🧠 Overview
+
+To ensure system reliability and visibility, I implemented a monitoring stack using Prometheus and Grafana, deployed via Helm on the Kubernetes cluster.
+This setup provides real-time insights into cluster performance, resource usage, and application-level metrics.
+
+## ⚙️ Tools Used
+
+Prometheus – For collecting and storing metrics from Kubernetes components, nodes, and application pods.
+
+Grafana – For creating visual dashboards to analyze and track system health over time.
+
+Helm – For easy and version-controlled installation of both Prometheus and Grafana.
+
+## 🔧 Deployment Steps
+
+Added the Helm repositories
+
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+```
+
+Deployed Prometheus
+
+```bash
+helm install prometheus prometheus-community/prometheus -n monitoring --create-namespace
+```
+
+Deployed Grafana
+
+```bash
+helm install grafana grafana/grafana -n monitoring
+```
+
+Retrieved the Grafana admin password
+
+```bash
+kubectl get secret grafana -n monitoring -o jsonpath="{.data.admin-password}" | base64 --decode
+```
+
+Port-forwarded Grafana for local access
+
+```bash
+kubectl port-forward svc/grafana -n monitoring 3000:80
+```
+
+Then accessed Grafana via 👉 http://localhost:3000
+
+# 📈 Key Metrics Monitored
+
+| Category               | Metric                                                                                    | Description                                      |
+| ---------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| **Kubernetes Nodes**   | `node_cpu_usage_seconds_total`, `node_memory_MemAvailable_bytes`                          | Tracks CPU and memory usage across nodes         |
+| **Pods**               | `container_cpu_usage_seconds_total`, `container_memory_usage_bytes`                       | Measures per-container resource usage            |
+| **Application**        | `http_server_requests_seconds_count`, `jvm_memory_used_bytes` (from Spring Boot Actuator) | Tracks API request latency and JVM memory        |
+| **Cluster Health**     | `kube_pod_status_ready`, `kube_deployment_status_replicas_available`                      | Monitors pod and deployment status               |
+| **MySQL** _(Optional)_ | `mysql_global_status_threads_connected`, `mysql_global_status_queries`                    | Tracks database connection and query performance |
+
+# 📊 Grafana Dashboards
+
+Cluster Overview: CPU, Memory, Node Utilization
+
+Pod-Level Monitoring: Resource usage and restart counts
+
+Application Performance: API latency and error rates
+
+Database Metrics: Connection counts and query rates
+
+Dashboards were built using the Prometheus data source and imported JSON templates from Grafana.com for faster setup.
+
+# 🧩 Outcome
+
+Achieved full observability of application and infrastructure.
+
+Identified resource bottlenecks during testing and optimized resource requests/limits.
+
+Demonstrated production-grade monitoring, alerting readiness, and visualization setup.
